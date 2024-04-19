@@ -16,6 +16,15 @@ export class MiddleImage implements CANVAS_COMPONENT {
   // 图片当前的绘制状态
   protected state = { w: 0, h: 0, x: 0, y: 0 }
 
+  // 毛玻璃效果
+  protected blur = {
+    value: 15, // 模糊像素
+    duration: 1000, // 动画持续时间
+
+    /** 程序自动计算得出 */
+    start: 0,
+  }
+
   constructor(
     protected canvasConsole: CANVAS_CONSOLE,
     source?: string
@@ -38,6 +47,7 @@ export class MiddleImage implements CANVAS_COMPONENT {
       this.width = image.naturalWidth
       this.height = image.naturalHeight
       this.errMsg = undefined
+      this.blur.start = Date.now()
       this.encodeRect()
     }
 
@@ -130,12 +140,23 @@ export class MiddleImage implements CANVAS_COMPONENT {
    * 缩放平移画布中垂直居中位置
    */
   private transformByState() {
-    const { state, canvasConsole } = this
+    const { state, canvasConsole, blur } = this
 
     const { canvas, context } = canvasConsole
     const scaleX = state.w / canvas.width
     const scaleY = state.h / canvas.height
 
+    // 毛玻璃绘制
+    const interval = Math.min(Date.now() - blur.start, blur.duration)
+    const filter =
+      blur.value -
+      (interval / blur.duration) * (interval / blur.duration) * blur.value
+
+    if (filter !== 0) {
+      context.filter = `blur(${filter}px)`
+    }
+
+    // 平移缩放效果
     context.scale(scaleX, scaleY)
     context.translate(state.x, state.y)
   }
