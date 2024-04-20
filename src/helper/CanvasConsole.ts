@@ -26,7 +26,9 @@ export class CanvasConsole implements CANVAS_CONSOLE {
     this.components.forEach((c) => {
       context.beginPath()
       context.save()
+      c.handleBefore && c.handleBefore(this)
       c.handle(this)
+      c.handleAfter && c.handleAfter(this)
       context.restore()
     })
 

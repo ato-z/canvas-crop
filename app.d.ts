@@ -53,8 +53,20 @@ interface CANVAS_COMPONENT {
   order?: number // 绘制顺序，数字越大 绘制在顶层
 
   /**
+   * 绘制前触发
+   * @param canvas
+   */
+  handleBefore?: (canvas: CANVAS_CONSOLE) => void
+
+  /**
    * 绘制的句柄函数
    * @param canvas
    */
   handle(canvas: CANVAS_CONSOLE): void
+
+  /**
+   * 绘制后触发
+   * @param canvas
+   */
+  handleAfter?: (canvas: CANVAS_CONSOLE) => void
 }
