@@ -9,7 +9,7 @@ export class CanvasConsole implements CANVAS_CONSOLE {
     public height: number
   ) {
     this.canvas.width = width * devicePixelRatio
-    this.canvas.height = width * devicePixelRatio
+    this.canvas.height = height * devicePixelRatio
     this.rpx = (width * devicePixelRatio) / 375
     this.context = this.canvas.getContext('2d')!
 

@@ -1,9 +1,12 @@
+import { Drag } from '../../includes/Drag'
 import { Rect } from './Rect'
 
 /**
  * 在canvas画布中绘制垂直居中的图像
  */
 export class MiddleImage extends Rect implements CANVAS_COMPONENT {
+  includes = [new Drag(this.canvasConsole.canvas, this)]
+
   // 需要绘制的图像信息
   protected image = new Image()
   protected width = 0
@@ -140,16 +143,26 @@ export class MiddleImage extends Rect implements CANVAS_COMPONENT {
     const { context, canvas } = canvasConsole
 
     context.save()
-    this.transformByState()
+    this.transformByRect()
     // 最基准的绘制不变
-    context.drawImage(this.image, 0, 0, canvas.width, canvas.height)
+    context.drawImage(
+      this.image,
+      0,
+      0,
+      this.image.naturalWidth,
+      this.image.naturalHeight,
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    )
     context.restore()
   }
 
   /**
-   * 缩放平移画布中垂直居中位置
+   * 缩放平移画布到指定位置
    */
-  private transformByState() {
+  private transformByRect() {
     const { scaleX, scaleY, view, blur, canvasConsole } = this
 
     const { context } = canvasConsole
@@ -165,8 +178,8 @@ export class MiddleImage extends Rect implements CANVAS_COMPONENT {
     }
 
     // 平移缩放效果
-    context.scale(scaleX, scaleY)
     context.translate(view.x, view.y)
+    context.scale(scaleX, scaleY)
   }
 
   /**
