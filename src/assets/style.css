@@ -3,7 +3,18 @@
   padding: 0;
 }
 
-canvas {
+.main {
+  max-width: 1000px;
+  margin: auto;
+  padding: 15px;
+}
+.main .win {
+  margin-bottom: 15px;
+}
+.main .win canvas {
   display: block;
   width: 100%;
+}
+.main .btns button {
+  padding: 4px 8px;
 }
