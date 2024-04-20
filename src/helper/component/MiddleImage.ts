@@ -19,10 +19,6 @@ export class MiddleImage extends Rect implements CANVAS_COMPONENT {
   protected scaleX = 1
   protected scaleY = 1
 
-  // 图片当前的位移状态
-  protected translateX = 0
-  protected translateY = 0
-
   // 毛玻璃效果
   protected blur = {
     value: 15, // 模糊像素
@@ -102,16 +98,14 @@ export class MiddleImage extends Rect implements CANVAS_COMPONENT {
       state.h = sh * byW
     }
 
-    const translateX = (dw - state.w) / 2
-    const translateY = (dh - state.h) / 2
+    state.x = (dw - state.w) / 2
+    state.y = (dh - state.h) / 2
 
     this.view = state
     this.parentRect = parentRect
 
     this.scaleX = state.w / parentRect.w
     this.scaleY = state.h / parentRect.h
-    this.translateX = translateX
-    this.translateY = translateY
   }
 
   /**
@@ -156,7 +150,7 @@ export class MiddleImage extends Rect implements CANVAS_COMPONENT {
    * 缩放平移画布中垂直居中位置
    */
   private transformByState() {
-    const { scaleX, scaleY, translateX, translateY, blur, canvasConsole } = this
+    const { scaleX, scaleY, view, blur, canvasConsole } = this
 
     const { context } = canvasConsole
 
@@ -172,7 +166,7 @@ export class MiddleImage extends Rect implements CANVAS_COMPONENT {
 
     // 平移缩放效果
     context.scale(scaleX, scaleY)
-    context.translate(translateX, translateY)
+    context.translate(view.x, view.y)
   }
 
   /**
