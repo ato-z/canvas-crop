@@ -7,7 +7,7 @@ import sourceSrc2 from './assets/h.webp'
 
 const canvasConsole = new CanvasConsole(800, 800)
 
-const withImage = new MiddleImage(canvasConsole, sourceSrc2)
+const withImage = new MiddleImage(canvasConsole, sourceSrc)
 
 canvasConsole.push(withImage)
 canvasConsole.appendTo(document.body)
