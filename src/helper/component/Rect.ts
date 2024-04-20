@@ -1,8 +1,10 @@
+import { Component } from './Component'
+
 /**
  * 创建矩阵信息
  */
 const angle = Math.PI / 180
-export class Rect implements RECT {
+export class Rect extends Component implements RECT {
   // 是否可以超出边界
   overstep = false
 
@@ -72,6 +74,13 @@ export class Rect implements RECT {
    */
   toJSON(): RECT['view'] {
     return JSON.parse(JSON.stringify(this.view))
+  }
+
+  /**
+   * 设置旋转角度
+   */
+  setAgent(a: number) {
+    this.view.a = a
   }
 
   /**
