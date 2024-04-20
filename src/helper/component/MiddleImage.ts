@@ -36,6 +36,7 @@ export class MiddleImage extends Rect implements CANVAS_COMPONENT {
     source?: string
   ) {
     super()
+    this.image.crossOrigin = 'anonymous'
     this.bindImageEvent()
     if (source) {
       this.switchImage(source)
