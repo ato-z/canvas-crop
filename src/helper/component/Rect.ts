@@ -1,9 +1,13 @@
 /**
  * 创建矩阵信息
  */
+const angle = Math.PI / 180
 export class Rect implements RECT {
   // 是否可以超出边界
   overstep = false
+
+  // 1度的弧度
+  readonly angle = angle
 
   // 当前视图信息
   view = {
@@ -44,6 +48,26 @@ export class Rect implements RECT {
   }
 
   /**
+   * 计算当角度存在时，偏移量的转换
+   */
+  private withAngle(x: number, y: number) {
+    const a = this.view.a % 360
+
+    switch (a) {
+      case 0:
+        return [x, y]
+      case 90:
+        return [y, -x]
+      case 180:
+        return [-x, -y]
+      case 270:
+        return [-y, x]
+    }
+
+    return [x, y]
+  }
+
+  /**
    * 当前矩阵的一次快照信息
    */
   toJSON(): RECT['view'] {
@@ -56,6 +80,8 @@ export class Rect implements RECT {
    * @param offsetY y轴的偏移量
    */
   offset(offsetX: number, offsetY: number) {
+    ;[offsetX, offsetY] = this.withAngle(offsetX, offsetY)
+
     let x = this.view.x + offsetX
     let y = this.view.y + offsetY
 
@@ -67,7 +93,5 @@ export class Rect implements RECT {
 
     this.view.x = x
     this.view.y = y
-
-    console.log(this.parentRect.w, this.view.w, this.minX, x)
   }
 }

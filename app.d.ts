@@ -6,6 +6,40 @@ declare module '*.png' {
   export default string
 }
 
+type RECT = {
+  // 规定了矩形绘制时是否可以超过边界
+  overstep: boolean
+
+  // 本身视图
+  view: {
+    w: number // 宽度
+    h: number // 高度
+    x: number // x轴偏移量
+    y: number // y轴偏移量
+    a: number // 旋转角度
+  }
+
+  // 父级容器的宽高
+  parentRect: {
+    w: number
+    h: number
+  }
+
+  /**
+   * 当前矩阵的一次快照信息
+   */
+  toJSON(): RECT['view']
+
+  /**
+   * 对矩阵进行一次偏移操作
+   * @param x
+   * @param y
+   */
+  offset(x: number, y: number): void
+}
+
+type POINIT = { x: number; y: number }
+
 interface CanvasRenderingContext2D {
   /**
    * 清空画布
@@ -50,6 +84,8 @@ interface CANVAS_CONSOLE {
 }
 
 interface CANVAS_COMPONENT {
+  includes: Array<unknown>
+
   order?: number // 绘制顺序，数字越大 绘制在顶层
 
   /**

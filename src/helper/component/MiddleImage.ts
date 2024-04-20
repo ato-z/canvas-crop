@@ -163,7 +163,7 @@ export class MiddleImage extends Rect implements CANVAS_COMPONENT {
    * 缩放平移画布到指定位置
    */
   private transformByRect() {
-    const { scaleX, scaleY, view, blur, canvasConsole } = this
+    const { scaleX, scaleY, view, blur, parentRect, canvasConsole } = this
 
     const { context } = canvasConsole
 
@@ -177,6 +177,10 @@ export class MiddleImage extends Rect implements CANVAS_COMPONENT {
       context.filter = `blur(${filter}px)`
     }
 
+    // 旋转
+    context.translate(parentRect.w / 2, parentRect.h / 2)
+    context.rotate(this.angle * view.a)
+    context.translate(-parentRect.w / 2, -parentRect.h / 2)
     // 平移缩放效果
     context.translate(view.x, view.y)
     context.scale(scaleX, scaleY)
@@ -202,5 +206,10 @@ export class MiddleImage extends Rect implements CANVAS_COMPONENT {
     } else {
       this.drawByWait()
     }
+  }
+
+  handleAfter(canvas: CANVAS_CONSOLE) {
+    const { context } = canvas
+    context.rotate(Math.PI)
   }
 }
