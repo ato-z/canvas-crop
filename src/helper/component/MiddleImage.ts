@@ -1,7 +1,9 @@
+import { Rect } from './Rect'
+
 /**
  * 在canvas画布中绘制垂直居中的图像
  */
-export class MiddleImage implements CANVAS_COMPONENT {
+export class MiddleImage extends Rect implements CANVAS_COMPONENT {
   // 需要绘制的图像信息
   protected image = new Image()
   protected width = 0
@@ -29,6 +31,7 @@ export class MiddleImage implements CANVAS_COMPONENT {
     protected canvasConsole: CANVAS_CONSOLE,
     source?: string
   ) {
+    super()
     this.bindImageEvent()
     if (source) {
       this.switchImage(source)
@@ -80,7 +83,8 @@ export class MiddleImage implements CANVAS_COMPONENT {
     const byW = dw / sw // 以宽度为准
     const byH = dh / sh // 以高度为准
 
-    const state = { w: 0, h: 0, x: 0, y: 0 }
+    // 初始状态值
+    const state = { w: 0, h: 0, x: 0, y: 0, r: 0 }
 
     /** 高度不超过, 以高度为准 */
     if (sh * byW < dh) {
@@ -95,7 +99,8 @@ export class MiddleImage implements CANVAS_COMPONENT {
     state.x = (dw - state.w) / 2
     state.y = (dh - state.h) / 2
 
-    this.state = state
+    Object.assign(this, state)
+    this.parentRect = { w: dw, h: dh }
   }
 
   /**
@@ -140,11 +145,11 @@ export class MiddleImage implements CANVAS_COMPONENT {
    * 缩放平移画布中垂直居中位置
    */
   private transformByState() {
-    const { state, canvasConsole, blur } = this
+    const { w, h, x, y, parentRect, blur, canvasConsole } = this
 
-    const { canvas, context } = canvasConsole
-    const scaleX = state.w / canvas.width
-    const scaleY = state.h / canvas.height
+    const { context } = canvasConsole
+    const scaleX = w / parentRect.w
+    const scaleY = h / parentRect.h
 
     // 毛玻璃绘制
     const interval = Math.min(Date.now() - blur.start, blur.duration)
@@ -158,7 +163,7 @@ export class MiddleImage implements CANVAS_COMPONENT {
 
     // 平移缩放效果
     context.scale(scaleX, scaleY)
-    context.translate(state.x, state.y)
+    context.translate(x, y)
   }
 
   /**
