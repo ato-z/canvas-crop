@@ -10,6 +10,7 @@ export class Drag extends Base {
   ) {
     super(el)
     this.listenerMouseEvent()
+    this.listenerTouchEvent()
   }
 
   /**
@@ -19,11 +20,9 @@ export class Drag extends Base {
     const { el } = this
     let state = false
     let prevPoint = { x: 0, y: 0 }
-    let rect = this.rect.toJSON()
     el.addEventListener('mousedown', (e) => {
       e.preventDefault()
       state = true
-      rect = this.rect.toJSON()
       prevPoint = this.getPointByMouse(e)
     })
     el.addEventListener('mousemove', (e) => {
@@ -38,8 +37,31 @@ export class Drag extends Base {
       this.rect.offset(offset.x, offset.y)
       prevPoint = point
     })
+
     el.addEventListener('mouseout', () => (state = false))
     el.addEventListener('mouseup', () => (state = false))
     el.addEventListener('mouseleave', () => (state = false))
+  }
+
+  /**
+   * 手指拖拽
+   */
+  private listenerTouchEvent() {
+    const { el } = this
+    let prevPoint = { x: 0, y: 0 }
+    el.addEventListener('touchstart', (e) => {
+      e.preventDefault()
+      prevPoint = this.getPointByTouch(e)
+    })
+    el.addEventListener('touchmove', (e) => {
+      e.preventDefault()
+      const point = this.getPointByTouch(e)
+      const offset = this.pointToCanvas({
+        x: point.x - prevPoint.x,
+        y: point.y - prevPoint.y,
+      })
+      this.rect.offset(offset.x, offset.y)
+      prevPoint = point
+    })
   }
 }
