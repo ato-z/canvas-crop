@@ -56,8 +56,8 @@ export class CutLine implements CANVAS_COMPONENT {
     context.drawDashedRect(
       1,
       1,
-      canvas.width,
-      canvas.height,
+      canvas.width - 2,
+      canvas.height - 2,
       5 * canvasConsole.rpx,
       this.round
     )
