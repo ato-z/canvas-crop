@@ -58,6 +58,18 @@ interface CanvasRenderingContext2D {
    * @param args
    */
   // fillTextByDpr(...args: Parameters<CanvasRenderingContext2D['fillText']>): void
+
+  /**
+   * 绘制矩形虚线
+   */
+  drawDashedRect(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    dashLength: number,
+    cornerRadius?: number
+  ): void
 }
 
 interface CANVAS_CONSOLE {

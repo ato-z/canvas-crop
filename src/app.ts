@@ -3,11 +3,18 @@ import './indexDb'
 import { CanvasConsole } from './helper/CanvasConsole'
 import { MiddleImage } from './helper/component/MiddleImage'
 import sourceSrc from './assets/w.png'
+import { CutLine } from './helper/component/CutLine'
 
-const canvasConsole = new CanvasConsole(800, 800)
+const canvasConsole = new CanvasConsole(400, 400)
 const withImage = new MiddleImage(canvasConsole, sourceSrc)
+const cutLine = new CutLine(
+  canvasConsole,
+  canvasConsole.rpx * 10,
+  canvasConsole.rpx * 10
+)
 
 canvasConsole.push(withImage)
+canvasConsole.push(cutLine)
 canvasConsole.appendTo(document.querySelector('.main .win')!)
 
 /** 演示操作 */
