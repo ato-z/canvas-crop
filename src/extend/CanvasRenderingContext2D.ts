@@ -20,7 +20,8 @@ CanvasRenderingContext2D.prototype.drawDashedRect = function (
   dashLength: number,
   cornerRadius = 0
 ) {
-  this.setLineDash([dashLength, dashLength]) // 设置虚线样式
+  // console.log(x, y, width, height, dashLength, cornerRadius)
+  this.setLineDash([dashLength, dashLength])
   this.beginPath()
   this.moveTo(x + cornerRadius, y)
   this.lineTo(x + width - cornerRadius, y)
