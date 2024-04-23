@@ -53,20 +53,13 @@ export class Rect extends Component implements RECT {
    * 计算当角度存在时，偏移量的转换
    */
   private withAngle(x: number, y: number) {
-    const a = this.view.a % 360
+    const angle = this.view.a % 360
+    const radians = (-angle * Math.PI) / 180
 
-    switch (a) {
-      case 0:
-        return [x, y]
-      case 90:
-        return [y, -x]
-      case 180:
-        return [-x, -y]
-      case 270:
-        return [-y, x]
-    }
+    const newX = x * Math.cos(radians) - y * Math.sin(radians)
+    const newY = x * Math.sin(radians) + y * Math.cos(radians)
 
-    return [x, y]
+    return [newX, newY]
   }
 
   /**
