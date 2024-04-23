@@ -27,6 +27,7 @@ upLocalBtn.addEventListener('click', function () {
   const input = document.createElement('input')
   input.type = 'file'
   input.accept = 'image/*'
+  input.capture = 'gallery'
   input.onchange = function () {
     const files = input.files!
     const [file] = files
