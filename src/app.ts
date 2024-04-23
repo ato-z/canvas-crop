@@ -22,11 +22,32 @@ const btns = document.querySelectorAll('.btns button')!
 const upLocalBtn = btns.item(0)
 const retateBtn = btns.item(1)
 
+async function getTheFile() {
+  const pickerOpts = {
+    types: [
+      {
+        description: 'Images',
+        accept: {
+          'image/*': ['.png', '.gif', '.jpeg', '.jpg'],
+        },
+      },
+    ],
+    excludeAcceptAllOption: true,
+    multiple: false,
+  }
+
+  // 打开文件选择器并从结果中解构出第一个句柄
+  const [fileHandle] = await window.showOpenFilePicker(pickerOpts)
+
+  // 获取文件内容
+  const fileData = await fileHandle.getFile()
+}
+
 // 上传图片
 upLocalBtn.addEventListener('click', function () {
-  const input = document.createElement('input')
+  /*const input = document.createElement('input')
   input.type = 'file'
-  input.accept = 'image/*'
+  input.accept = 'image/png, image/jpeg, image/jpg'
   input.capture = 'gallery'
   input.onchange = function () {
     const files = input.files!
@@ -34,7 +55,8 @@ upLocalBtn.addEventListener('click', function () {
     const url = URL.createObjectURL(file)
     withImage.switchImage(url)
   }
-  input.click()
+  input.click()*/
+  getTheFile()
 })
 
 // 旋转
