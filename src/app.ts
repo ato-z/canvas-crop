@@ -1,79 +1,38 @@
 import './extend/CanvasRenderingContext2D'
-import { CanvasConsole } from './helper/CanvasConsole'
-import { MiddleImage } from './helper/component/MiddleImage'
+import { CanvasCrop } from './CanvasCrop'
+import { MatrixBorderComponent, VerticalImageComponent } from './component'
+// import { MiddleImage } from './helper/component/MiddleImage'
 import sourceSrc from './assets/w.png'
-import { CutLine } from './helper/component/CutLine'
+import { DragBehavior } from './behaviors'
+import { BlurEffect, LoadingEffect } from './effects'
+// import { CutLine } from './helper/component/CutLine'
 
-const canvasConsole = new CanvasConsole(400, 400)
-const withImage = new MiddleImage(canvasConsole, sourceSrc)
-const cutLine = new CutLine(
-  canvasConsole,
-  canvasConsole.rpx * 10,
-  canvasConsole.rpx * 10
-)
+const canvasCrop = new CanvasCrop(400, 400)
+canvasCrop.draw()
 
-canvasConsole.push(withImage)
-canvasConsole.push(cutLine)
-canvasConsole.appendTo(document.querySelector('.main .win')!)
+const component1 = new VerticalImageComponent(canvasCrop.canvas, sourceSrc)
+const component2 = new MatrixBorderComponent(canvasCrop.canvas, 20)
+
+// 添加拖拽行为
+component1.addBehavior(DragBehavior)
+
+// 添加等待效果
+component1.addEffect(new LoadingEffect(component1, '努力加载中...'))
+
+canvasCrop.addComponents(component1)
+canvasCrop.addComponents(component2)
+canvasCrop.appendTo(document.querySelector('.main .win')!)
+
+// 准备就绪时绘制
+canvasCrop.beAllSet().then((res) => {
+  console.log(res, 'res')
+  // 添加毛玻璃效果
+  component1.addEffect(
+    new BlurEffect(component1, { value: 10, duration: 1000 })
+  )
+})
 
 /** 演示操作 */
 const btns = document.querySelectorAll('.btns button')!
 const upLocalBtn = btns.item(0)
 const retateBtn = btns.item(1)
-
-async function getTheFile() {
-  const pickerOpts = {
-    types: [
-      {
-        description: 'Images',
-        accept: {
-          'image/*': ['.png', '.gif', '.jpeg', '.jpg'],
-        },
-      },
-    ],
-    excludeAcceptAllOption: true,
-    multiple: false,
-  }
-
-  // 打开文件选择器并从结果中解构出第一个句柄
-  const [fileHandle] = await window.showOpenFilePicker(pickerOpts)
-
-  // 获取文件内容
-  const fileData = await fileHandle.getFile()
-}
-
-// 上传图片
-upLocalBtn.addEventListener('click', function () {
-  /*const input = document.createElement('input')
-  input.type = 'file'
-  input.accept = 'image/png, image/jpeg, image/jpg'
-  input.capture = 'gallery'
-  input.onchange = function () {
-    const files = input.files!
-    const [file] = files
-    const url = URL.createObjectURL(file)
-    withImage.switchImage(url)
-  }
-  input.click()*/
-  getTheFile()
-})
-
-// 旋转
-let animeIng = false
-let r = 0
-retateBtn.addEventListener('click', function () {
-  if (animeIng) {
-    return void 0
-  }
-
-  // 动画开始
-  animeIng = true
-  withImage
-    .anime(600, (scale) => {
-      withImage.setAgent(r + 90 * scale)
-    })
-    .then(() => {
-      r += 90
-      animeIng = false
-    })
-})

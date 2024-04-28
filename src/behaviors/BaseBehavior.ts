@@ -1,8 +1,23 @@
+import type { BaseComponent } from '../component/BaseComponent'
+
 /**
- * 提供基础的坐标转换方法
+ * 额外用户行为的拓展,如拖拽 缩放
  */
-export class Base {
-  constructor(protected el: HTMLCanvasElement) {}
+export class BaseBehavior {
+  constructor(
+    protected el: HTMLCanvasElement,
+    protected component: BaseComponent
+  ) {}
+
+  /**
+   * 安装到组件时触发的操作
+   */
+  install(): void {}
+
+  /**
+   * 当被组件卸载时触发
+   */
+  uninstall(): void {}
 
   /**
    * 传入鼠标事件返回统一坐标系

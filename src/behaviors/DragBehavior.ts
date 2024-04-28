@@ -1,14 +1,15 @@
-import { Base } from './Base'
+import type { BaseComponent } from '../component/BaseComponent'
+import { BaseBehavior } from './BaseBehavior'
 
 /**
- * 实现组件的拖动行为
+ * 拖拽行为
  */
-export class Drag extends Base {
+export class DragBehavior extends BaseBehavior {
   constructor(
     protected el: HTMLCanvasElement,
-    protected rect: RECT
+    protected component: BaseComponent
   ) {
-    super(el)
+    super(el, component)
     this.listenerMouseEvent()
     this.listenerTouchEvent()
   }
@@ -34,7 +35,7 @@ export class Drag extends Base {
         x: point.x - prevPoint.x,
         y: point.y - prevPoint.y,
       })
-      this.rect.offset(offset.x, offset.y)
+      this.component.offset(offset.x, offset.y)
       prevPoint = point
     })
 
@@ -54,13 +55,16 @@ export class Drag extends Base {
       prevPoint = this.getPointByTouch(e)
     })
     el.addEventListener('touchmove', (e) => {
+      // 如果有多个手指则取消拖动行为
+      if (e.touches.length !== 1) return void 0
+
       e.preventDefault()
       const point = this.getPointByTouch(e)
       const offset = this.pointToCanvas({
         x: point.x - prevPoint.x,
         y: point.y - prevPoint.y,
       })
-      this.rect.offset(offset.x, offset.y)
+      this.component.offset(offset.x, offset.y)
       prevPoint = point
     })
   }
