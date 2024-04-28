@@ -1,38 +1,23 @@
-import { Component } from './Component'
-
 /**
- * 创建矩阵信息
+ * 绘图相关的坐标系
  */
-const angle = Math.PI / 180
-export class Rect extends Component implements RECT {
+export class Rect {
   // 是否可以超出边界
   overstep = false
 
-  // 1度的弧度
-  readonly angle = angle
-
   // 当前视图信息
-  view = {
-    // 宽度
-    w: 0,
-
-    // 高度
-    h: 0,
-
-    // x轴偏移量
-    x: 0,
-
-    // y轴偏移量
-    y: 0,
-
-    // 旋转角度
-    a: 0,
+  protected view = {
+    w: 0, // 宽度
+    h: 0, // 高度
+    x: 0, // x轴偏移量
+    y: 0, // y轴偏移量
+    a: 0, // 旋转角度
   }
 
   // 父级容器的宽高
-  parentRect = {
-    w: 0,
-    h: 0,
+  protected parentRect = {
+    w: 0, // 宽度
+    h: 0, // 高度
   }
 
   /**
@@ -63,17 +48,38 @@ export class Rect extends Component implements RECT {
   }
 
   /**
-   * 当前矩阵的一次快照信息
+   * 返回当前矩阵的快照信息
    */
-  toJSON(): RECT['view'] {
+  get viewSnapshot() {
     return JSON.parse(JSON.stringify(this.view))
   }
 
+  constructor(protected el: HTMLCanvasElement) {
+    this.setParentRect({ w: el.width, h: el.height })
+  }
+
   /**
-   * 设置旋转角度
+   * 设置父级容器的宽高
    */
-  setAgent(a: number) {
-    this.view.a = a
+  setParentRect({ w, h }: { w?: number; h?: number }) {
+    if (w !== undefined) this.parentRect.w = w
+    if (h !== undefined) this.parentRect.h = h
+  }
+
+  /**
+   * 设置是否允许跨界
+   * @param overstep
+   */
+  setOverstep(overstep: boolean) {
+    this.overstep = overstep
+  }
+
+  /**
+   * 更新当前矩阵信息
+   * @param view
+   */
+  setView(view: Partial<typeof this.view>) {
+    Object.assign(this.view, view)
   }
 
   /**
@@ -95,5 +101,37 @@ export class Rect extends Component implements RECT {
 
     this.view.x = x
     this.view.y = y
+  }
+
+  /**
+   * 传入鼠标事件返回统一坐标系
+   * @param event
+   */
+  protected getPointByMouse(event: MouseEvent) {
+    const rect = this.el.getBoundingClientRect()
+    return { x: event.pageX - rect.left, y: event.pageY - rect.top }
+  }
+
+  /**
+   * 传入手指触摸事件返回统一坐标系
+   * @param event
+   */
+  protected getPointByTouch(event: TouchEvent) {
+    const rect = this.el.getBoundingClientRect()
+    const [touch] = event.touches
+    return { x: touch.pageX - rect.left, y: touch.pageY - rect.top }
+  }
+
+  /**
+   * 事件坐标点转画布坐标点
+   */
+  protected pointToCanvas(point: POINT) {
+    const { el } = this
+    const { offsetWidth, offsetHeight, width, height } = el
+
+    return {
+      x: (point.x * width) / offsetWidth,
+      y: (point.y * height) / offsetHeight,
+    }
   }
 }

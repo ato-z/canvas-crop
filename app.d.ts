@@ -6,6 +6,23 @@ declare module '*.png' {
   export default string
 }
 
+// 组件的额外拓展行为
+type BEHAVIOR = {
+  new (el: HTMLElement, component: Component): BEHAVIOR
+
+  install(): void
+  uninstall(): void
+}
+
+// 组件的效果
+type EFFECT = {
+  new (component: Component): EFFECT
+
+  beforeUpdate(): void
+  update(): void
+  afterUpdate(): void
+}
+
 type RECT = {
   // 规定了矩形绘制时是否可以超过边界
   overstep: boolean
@@ -38,7 +55,7 @@ type RECT = {
   offset(x: number, y: number): void
 }
 
-type POINIT = { x: number; y: number }
+type POINT = { x: number; y: number }
 
 interface CanvasRenderingContext2D {
   /**

@@ -1,5 +1,4 @@
 import './extend/CanvasRenderingContext2D'
-import './indexDb'
 import { CanvasConsole } from './helper/CanvasConsole'
 import { MiddleImage } from './helper/component/MiddleImage'
 import sourceSrc from './assets/w.png'

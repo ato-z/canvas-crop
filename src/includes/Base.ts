@@ -26,7 +26,7 @@ export class Base {
   /**
    * 事件坐标点转画布坐标点
    */
-  protected pointToCanvas(point: POINIT) {
+  protected pointToCanvas(point: POINT) {
     const { el } = this
     const { offsetWidth, offsetHeight, width, height } = el
 
